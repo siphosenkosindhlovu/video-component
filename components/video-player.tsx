@@ -1,6 +1,6 @@
 import React, { FC, useState, useRef, useEffect, ReactEventHandler, MouseEventHandler } from 'react';
-import { Box, AspectRatio, Stack, VStack, Text } from '@chakra-ui/react'
-
+import { Box, AspectRatio, Stack, VStack, Text, IconButton, ButtonGroup, } from '@chakra-ui/react'
+import { MdPlayArrow, MdVolumeUp } from 'react-icons/md'
 export interface VideoMetadata {
   src: string;
   poster?: string;
@@ -9,6 +9,10 @@ export interface VideoMetadata {
   description: string;
   startTimeStamp: number;
   endTimeStamp: number;
+}
+
+const MediaControlButton: FC<{ label: string, Icon: FC }> = ({ label, Icon, ...rest }) => {
+  return <IconButton aria-label={label} icon={<Icon/>} bgColor="transparent" borderRadius={'99px'}/>
 }
 
 const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, startTimeStamp, endTimeStamp, poster }) => {
@@ -42,16 +46,22 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
 
   return (
     <Stack direction={['column', 'row']} boxShadow={'md'} rounded={'md'} py={9} px={6} spacing={6}>
-      <AspectRatio ratio={16 / 9} maxW="540px" w="50%" bg="black">
-        <Box p={3}>
+      <Box w="50%" position={'relative'}>
+        <AspectRatio ratio={16 / 9} w="100%" bg="black">
           <video
             src={src}
             poster={poster}
+            controls
             ref={videoElement}
-            onLoadedMetadata={setDuration}
           />
+        </AspectRatio>
+        <Box position={'relative'}>
+          <ButtonGroup>
+            <MediaControlButton label="Play music" Icon={MdPlayArrow}/>
+            <MediaControlButton label="Play music" Icon={MdVolumeUp}/>
+          </ButtonGroup>
         </Box>
-      </AspectRatio>
+      </Box>
       <VStack w="50%" spacing="10px" align="flex-start">
         <Text as="h1" fontWeight={'bold'} fontSize="25px">{shortTitle}</Text>
         <Text decoration={'italic'} fontSize="15px"><i>{title}</i></Text>
