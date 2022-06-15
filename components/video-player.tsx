@@ -1,6 +1,6 @@
 import React, { FC, useState, useRef, useEffect, ReactEventHandler, MouseEventHandler } from 'react';
-import { Box, AspectRatio, Stack, VStack, Text, IconButton, ButtonGroup, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack } from '@chakra-ui/react'
-import { MdPause, MdPlayArrow, MdVolumeUp } from 'react-icons/md'
+import { Box, AspectRatio, Stack, VStack, Text, IconButton, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack } from '@chakra-ui/react'
+import { MdPause, MdPlayArrow } from 'react-icons/md'
 import { msToHMS } from '../utils/msToHMS';
 export interface VideoMetadata {
   src: string;

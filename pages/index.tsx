@@ -1,4 +1,4 @@
-import video from '../assets/pexelsassetspexels-arvin-latifi-6466763.mp4'
+// import video from '../assets/pexelsassetspexels-arvin-latifi-6466763.mp4'
 import VideoPlayer, { VideoMetadata } from '../components/video-player';
 import { Container } from '@chakra-ui/react';
 export default function Home() {
