@@ -1,3 +1,4 @@
+
 import VideoPlayer, { VideoMetadata } from '../components/video-player';
 import { Container } from '@chakra-ui/react';
 export default function Home() {

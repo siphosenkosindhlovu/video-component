@@ -7,7 +7,7 @@ export function msToHMS( ms: number ): string {
     // 3- Extract minutes:
     const minutes = zeroPad(parseInt( String(mseconds / 60) ), 2); // 60 seconds in 1 minute
     // 4- Keep only seconds not extracted to minutes:
-    const seconds = zeroPad(parseInt( mseconds % 60), 2);
+    const seconds = zeroPad(parseInt( String(mseconds % 60) ), 2);
     return ( `${hours}:${minutes}:${seconds}`);
 }
 
