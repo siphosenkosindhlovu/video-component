@@ -86,7 +86,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
 
   return (
     <Stack direction={['column', 'row']} boxShadow={'md'} rounded={'md'} py={9} px={6} spacing={6}>
-      <Box w={['100%', null, '50%']} position={'relative'}>
+      <Box role="group" w={['100%', null, '50%']} position={'relative'}>
         <AspectRatio ratio={16 / 9} w="100%" bg="black">
           <Box w="100%">
             <video
@@ -95,7 +95,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
               ref={videoElement}
               onTimeUpdate={handleTimeUpdate}
             />
-            <Box position={'absolute'} w={'100%'} bottom={0} bgGradient={'linear(to-t, black, transparent)'} color={'white'}>
+            <Box opacity={0} _groupHover={{ opacity: 1 }} transition='opacity 0.3s ease' position={'absolute'} w={'100%'} bottom={0} bgGradient={'linear(to-t, black, transparent)'} color={'white'}>
               <Flex justify={'space-between'}>
                 <HStack spacing={'10px'}>
                   {
