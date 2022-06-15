@@ -1,10 +1,10 @@
-
+import video from '../assets/pexels-arvin-latifi-6466763.mp4'
 import VideoPlayer, { VideoMetadata } from '../components/video-player';
 import { Container } from '@chakra-ui/react';
 export default function Home() {
 
   const videoObj: VideoMetadata = {
-    src: 'https://ia800706.us.archive.org/9/items/2013_DEFCON_Documentary/2013_DEFCON_Documentary.HD.mp4',
+    src: '/assets/pexels-arvin-latifi-6466763.mp4',
     title: 'After the first def Con. He wanted to change it and start doing it again, but his friends convinced him',
     description: `After the first Def Con, he wanted to change it and start
     doing it again. He didn’t want to go to the first one, but his friends convinced
@@ -19,8 +19,8 @@ export default function Home() {
     attending Defcon. Steve is a teacher. Steve and his group are going to talk
     about Defcon and get their badge`,
     shortTitle: 'How did Defcon idea originate?',
-    startTimeStamp: 152000,
-    endTimeStamp: 215000
+    startTimeStamp: 10000,
+    endTimeStamp: 21000
   }
 
   return (

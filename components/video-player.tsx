@@ -1,5 +1,5 @@
 import React, { FC, useState, useRef, useEffect, ReactEventHandler, MouseEventHandler } from 'react';
-import { Box, AspectRatio, Stack, VStack, Text, IconButton, ButtonGroup, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack} from '@chakra-ui/react'
+import { Box, AspectRatio, Stack, VStack, Text, IconButton, ButtonGroup, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack } from '@chakra-ui/react'
 import { MdPause, MdPlayArrow, MdVolumeUp } from 'react-icons/md'
 import { msToHMS } from '../utils/msToHMS';
 export interface VideoMetadata {
@@ -26,14 +26,10 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
   const [progress, setProgress] = useState(0);
   const [readyToPlay, setReadyToPlay] = useState(false)
   let duration = useRef<number>(null);
-  
+
   const togglePlayback: MouseEventHandler<HTMLButtonElement> = (): void => {
     setIsPlaying(!isPlaying)
   };
-  
-  const updateDuration: ReactEventHandler<HTMLVideoElement> = (e: React.ChangeEvent<HTMLVideoElement>): void => {
-    duration.current = e.target.duration * 1000
-  }
 
   const handleTimeUpdate: ReactEventHandler<HTMLVideoElement> = (e: React.ChangeEvent<HTMLVideoElement>): void => {
     const currentTime = e.target.currentTime * 1000;
@@ -59,7 +55,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
   }, [isPlaying])
 
   useEffect(() => {
-    if(!(progress >= startTimeStamp && progress < endTimeStamp)) {
+    if (!(progress >= startTimeStamp && progress < endTimeStamp)) {
       videoElement.current.currentTime = startTimeStamp / 1000;
       setProgress(startTimeStamp)
       setIsPlaying(false)
@@ -76,14 +72,14 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
       duration.current = videoElement.current.duration * 1000
       setProgress(startTimeStamp)
     }
-  }, [])
-  
+  }, [startTimeStamp])
+
 
   const handleProgressChange = (time: number): void => {
     if (time < endTimeStamp && time >= startTimeStamp) {
       videoElement.current.currentTime = time / 1000;
       setProgress(time)
-    }else{
+    } else {
       setIsPlaying(false)
     }
   }
@@ -92,36 +88,38 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
     <Stack direction={['column', 'row']} boxShadow={'md'} rounded={'md'} py={9} px={6} spacing={6}>
       <Box w={['100%', null, '50%']} position={'relative'}>
         <AspectRatio ratio={16 / 9} w="100%" bg="black">
-          <video
-            src={src}
-            poster={poster}
-            ref={videoElement}
-            onTimeUpdate={handleTimeUpdate}
-          />
-        </AspectRatio>
-        <Box position={'absolute'} w={'100%'} bottom={0} bgGradient={'linear(to-t, black, white)'} color={'white'}>
-          <Flex justify={'space-between'}>
-            <HStack spacing={'10px'}>
-              {
-                !isPlaying ?
-                <MediaControlButton label="Play music" Icon={MdPlayArrow} onClick={togglePlayback} />:
-                <MediaControlButton label="Pause music" Icon={MdPause} onClick={togglePlayback} />
-
-              }
-              <Text>{msToHMS(progress)} / {msToHMS(duration.current)}</Text>
-            </HStack>
-          </Flex>
-          <Box px={3}>
-            <Slider aria-label="Progress slider" min={0} max={duration.current} step={1} value={progress} onChange={handleProgressChange}>
-              <SliderTrack backgroundColor={'gray.600'}>
-                <Box position='absolute' width={`${startTimeStamp / duration.current * 100}%`} height="4px" backgroundColor={'gray.100'} zIndex={10} />
-                <Box position='absolute' width={`${(duration.current - endTimeStamp) / duration.current * 100}%`} height="4px" backgroundColor={'gray.100'} zIndex={10} right={0} />
-                <SliderFilledTrack bg={'gray.900'} />
-              </SliderTrack>
-              <SliderThumb />
-            </Slider>
+          <Box w="100%">
+            <video
+              src={src}
+              poster={poster}
+              ref={videoElement}
+              onTimeUpdate={handleTimeUpdate}
+            />
+            <Box position={'absolute'} w={'100%'} bottom={0} bgGradient={'linear(to-t, black, transparent)'} color={'white'}>
+              <Flex justify={'space-between'}>
+                <HStack spacing={'10px'}>
+                  {
+                    !isPlaying ?
+                      <MediaControlButton label="Play music" Icon={MdPlayArrow} onClick={togglePlayback} /> :
+                      <MediaControlButton label="Pause music" Icon={MdPause} onClick={togglePlayback} />
+    
+                  }
+                  <Text>{msToHMS(progress)} / {msToHMS(duration.current)}</Text>
+                </HStack>
+              </Flex>
+              <Box px={3}>
+                <Slider aria-label="Progress slider" min={0} max={duration.current} step={1} value={progress} onChange={handleProgressChange}>
+                  <SliderTrack backgroundColor={'gray.100'}>
+                    <Box position='absolute' width={`${startTimeStamp / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} />
+                    <Box position='absolute' width={`${(duration.current - endTimeStamp) / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} right={0} />
+                    <SliderFilledTrack bg={'gray.400'} />
+                  </SliderTrack>
+                  <SliderThumb />
+                </Slider>
+              </Box>
+            </Box>
           </Box>
-        </Box>
+        </AspectRatio>
       </Box>
       <VStack w={['100%', null, '50%']} spacing="10px" align="stretch">
         <Text as="h1" fontWeight={'bold'} fontSize="25px">{shortTitle}</Text>
