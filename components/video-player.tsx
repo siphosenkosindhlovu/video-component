@@ -59,6 +59,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
       videoElement.current.currentTime = startTimeStamp / 1000;
       setProgress(startTimeStamp)
       setIsPlaying(false)
+      setReadyToPlay(true)
     }
   }, [progress, startTimeStamp, endTimeStamp])
 
@@ -67,10 +68,12 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
       console.log(videoElement.current.duration)
       duration.current = videoElement.current.duration * 1000
       setProgress(startTimeStamp)
+      setReadyToPlay(true)
     })
     if (videoElement && videoElement.current.readyState > 0) {
       duration.current = videoElement.current.duration * 1000
       setProgress(startTimeStamp)
+      setReadyToPlay(true)
     }
   }, [startTimeStamp])
 
@@ -94,6 +97,8 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
               poster={poster}
               ref={videoElement}
               onTimeUpdate={handleTimeUpdate}
+              onWaiting={e => setReadyToPlay(false)}
+              onPlaying={e => setReadyToPlay(true)}
             />
             <Box opacity={0} _groupHover={{ opacity: 1 }} transition='opacity 0.3s ease' position={'absolute'} w={'100%'} bottom={0} bgGradient={'linear(to-t, black, transparent)'} color={'white'}>
               <Flex justify={'space-between'}>
@@ -104,14 +109,17 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
                       <MediaControlButton label="Pause music" Icon={MdPause} onClick={togglePlayback} />
     
                   }
-                  <Text>{msToHMS(progress)} / {msToHMS(duration.current)}</Text>
+                  <Text>{msToHMS(progress)} / {msToHMS(endTimeStamp)}</Text>
                 </HStack>
+                <Box px={3}>
+                   {!readyToPlay && 'Loading'}
+                </Box>
               </Flex>
               <Box px={3}>
-                <Slider aria-label="Progress slider" min={0} max={duration.current} step={1} value={progress} onChange={handleProgressChange}>
+                <Slider aria-label="Progress slider" min={startTimeStamp} max={endTimeStamp} step={1} value={progress} onChange={handleProgressChange}>
                   <SliderTrack backgroundColor={'gray.100'}>
-                    <Box position='absolute' width={`${startTimeStamp / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} />
-                    <Box position='absolute' width={`${(duration.current - endTimeStamp) / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} right={0} />
+                    {/* <Box position='absolute' width={`${startTimeStamp / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} />
+                    <Box position='absolute' width={`${(duration.current - endTimeStamp) / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} right={0} /> */}
                     <SliderFilledTrack bg={'gray.400'} />
                   </SliderTrack>
                   <SliderThumb />
@@ -128,7 +136,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
           {description}
         </Text>
         <Text align={'right'}>
-          {msToHMS(endTimeStamp - startTimeStamp)}
+          {duration.current}
         </Text>
         <Text align={'right'}>
           {msToHMS(startTimeStamp)} - {msToHMS(endTimeStamp)}
