@@ -136,7 +136,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
           {description}
         </Text>
         <Text align={'right'}>
-          {duration.current}
+          {msToHMS(duration.current)}
         </Text>
         <Text align={'right'}>
           {msToHMS(startTimeStamp)} - {msToHMS(endTimeStamp)}
