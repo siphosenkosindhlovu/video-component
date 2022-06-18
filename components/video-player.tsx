@@ -1,5 +1,5 @@
 import React, { FC, useState, useRef, useEffect, ReactEventHandler, MouseEventHandler } from 'react';
-import { Box, AspectRatio, Stack, VStack, Text, IconButton, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack } from '@chakra-ui/react'
+import { Box, AspectRatio, Stack, VStack, Text, IconButton, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack, Spinner } from '@chakra-ui/react'
 import { MdPause, MdPlayArrow } from 'react-icons/md'
 import { msToHMS } from '../utils/msToHMS';
 export interface VideoMetadata {
@@ -24,11 +24,13 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
   const videoElement = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0);
-  const [readyToPlay, setReadyToPlay] = useState(false)
+  const [readyToPlay, setReadyToPlay] = useState(true)
   let duration = useRef<number>(null);
 
   const togglePlayback: MouseEventHandler<HTMLButtonElement> = (): void => {
-    setIsPlaying(!isPlaying)
+    if (readyToPlay) {
+      setIsPlaying(!isPlaying)
+    }
   };
 
   const handleTimeUpdate: ReactEventHandler<HTMLVideoElement> = (e: React.ChangeEvent<HTMLVideoElement>): void => {
@@ -47,7 +49,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
   }
 
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && videoElement.current.paused) {
       videoElement.current.play();
     } else {
       videoElement.current.pause();
@@ -65,7 +67,6 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
 
   useEffect(() => {
     videoElement.current.addEventListener('loadedmetadata', (e) => {
-      console.log(videoElement.current.duration)
       duration.current = videoElement.current.duration * 1000
       setProgress(startTimeStamp)
       setReadyToPlay(true)
@@ -97,22 +98,27 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
               poster={poster}
               ref={videoElement}
               onTimeUpdate={handleTimeUpdate}
-              onWaiting={e => setReadyToPlay(false)}
+              onWaiting={e => { console.log('waiting'); setReadyToPlay(false) }}
               onPlaying={e => setReadyToPlay(true)}
+              onError={e => console.log({ error: e })}
             />
-            <Box opacity={0} _groupHover={{ opacity: 1 }} transition='opacity 0.3s ease' position={'absolute'} w={'100%'} bottom={0} bgGradient={'linear(to-t, black, transparent)'} color={'white'}>
+            <Box opacity={1} _groupHover={{ opacity: 1 }} transition='opacity 0.3s ease' position={'absolute'} w={'100%'} bottom={0} bgGradient={'linear(to-t, black, transparent)'} color={'white'}>
               <Flex justify={'space-between'}>
                 <HStack spacing={'10px'}>
                   {
+                    readyToPlay ?
                     !isPlaying ?
                       <MediaControlButton label="Play music" Icon={MdPlayArrow} onClick={togglePlayback} /> :
                       <MediaControlButton label="Pause music" Icon={MdPause} onClick={togglePlayback} />
-    
+                    :
+                  <IconButton aria-label='Loading' bg="transparent" disabled color={'white'}>
+                    <Spinner size={'md'} />
+                  </IconButton>
                   }
                   <Text>{msToHMS(progress)} / {msToHMS(endTimeStamp)}</Text>
                 </HStack>
                 <Box px={3}>
-                   {!readyToPlay && 'Loading'}
+                  {!readyToPlay && 'Loading'}
                 </Box>
               </Flex>
               <Box px={3}>
