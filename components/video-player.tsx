@@ -117,9 +117,6 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
                   }
                   <Text>{msToHMS(progress)} / {msToHMS(endTimeStamp)}</Text>
                 </HStack>
-                <Box px={3}>
-                  {!readyToPlay && 'Loading'}
-                </Box>
               </Flex>
               <Box px={3}>
                 <Slider aria-label="Progress slider" min={startTimeStamp} max={endTimeStamp} step={1} value={progress} onChange={handleProgressChange}>
