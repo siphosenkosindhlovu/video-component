@@ -1,7 +1,8 @@
 import React, { FC, useState, useRef, useEffect, ReactEventHandler, MouseEventHandler } from 'react';
-import { Box, AspectRatio, Stack, VStack, Text, IconButton, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack, Spinner } from '@chakra-ui/react'
+import { Box, AspectRatio, Stack, VStack, Text, IconButton, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Flex, HStack, Spinner } from '@chakra-ui/react'
 import { MdPause, MdPlayArrow } from 'react-icons/md'
 import { msToHMS, msToEng } from '../utils/msToHMS';
+import { MediaControlButton } from './MediaControlButton';
 export interface VideoMetadata {
   src: string;
   poster?: string;
@@ -10,14 +11,6 @@ export interface VideoMetadata {
   description: string;
   startTimeStamp: number;
   endTimeStamp: number;
-}
-
-interface MediaControlButtonProps extends Omit<IconButtonProps, 'aria-label'> {
-  label: string, Icon: FC
-}
-
-const MediaControlButton: FC<MediaControlButtonProps> = ({ label, Icon, ...rest }) => {
-  return <IconButton aria-label={label} icon={<Icon />} variant={'ghost'} bgColor="transparent" borderRadius={'99px'} size="md" fontSize={'24px'} {...rest} />
 }
 
 const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, startTimeStamp, endTimeStamp, poster }) => {
