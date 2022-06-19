@@ -66,15 +66,16 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
   }, [progress, startTimeStamp, endTimeStamp])
 
   useEffect(() => {
-    videoElement.current.addEventListener('loadedmetadata', (e) => {
+    function handleVideoLoad(){
       duration.current = videoElement.current.duration * 1000
       setProgress(startTimeStamp)
       setReadyToPlay(true)
+    }
+    videoElement.current.addEventListener('loadedmetadata', (e) => {
+      handleVideoLoad()
     })
     if (videoElement && videoElement.current.readyState > 0) {
-      duration.current = videoElement.current.duration * 1000
-      setProgress(startTimeStamp)
-      setReadyToPlay(true)
+      handleVideoLoad()
     }
   }, [startTimeStamp])
 
@@ -98,7 +99,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
               poster={poster}
               ref={videoElement}
               onTimeUpdate={handleTimeUpdate}
-              onWaiting={e => { console.log('waiting'); setReadyToPlay(false) }}
+              onWaiting={e => setReadyToPlay(false)}
               onPlaying={e => setReadyToPlay(true)}
               onError={e => console.log({ error: e })}
             />
@@ -107,22 +108,20 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
                 <HStack spacing={'10px'}>
                   {
                     readyToPlay ?
-                    !isPlaying ?
-                      <MediaControlButton label="Play music" Icon={MdPlayArrow} onClick={togglePlayback} /> :
-                      <MediaControlButton label="Pause music" Icon={MdPause} onClick={togglePlayback} />
-                    :
-                  <IconButton aria-label='Loading' bg="transparent" disabled color={'white'}>
-                    <Spinner size={'md'} />
-                  </IconButton>
+                      !isPlaying ?
+                        <MediaControlButton label="Play music" Icon={MdPlayArrow} onClick={togglePlayback} /> :
+                        <MediaControlButton label="Pause music" Icon={MdPause} onClick={togglePlayback} />
+                      :
+                      <IconButton aria-label='Loading' bg="transparent" _hover={{ bg: 'transparent' }} disabled color={'white'}>
+                        <Spinner size={'md'} />
+                      </IconButton>
                   }
-                  <Text>{msToHMS(progress)} / {msToHMS(endTimeStamp)}</Text>
+                  <Text>{msToHMS(progress - startTimeStamp)} / {msToHMS(endTimeStamp - startTimeStamp)}</Text>
                 </HStack>
               </Flex>
               <Box px={3}>
                 <Slider aria-label="Progress slider" min={startTimeStamp} max={endTimeStamp} step={1} value={progress} onChange={handleProgressChange}>
                   <SliderTrack backgroundColor={'gray.100'}>
-                    {/* <Box position='absolute' width={`${startTimeStamp / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} />
-                    <Box position='absolute' width={`${(duration.current - endTimeStamp) / duration.current * 100}%`} height="4px" backgroundColor={'gray.600'} zIndex={10} right={0} /> */}
                     <SliderFilledTrack bg={'gray.400'} />
                   </SliderTrack>
                   <SliderThumb />
