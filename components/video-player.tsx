@@ -1,7 +1,7 @@
 import React, { FC, useState, useRef, useEffect, ReactEventHandler, MouseEventHandler } from 'react';
 import { Box, AspectRatio, Stack, VStack, Text, IconButton, Slider, SliderTrack, SliderFilledTrack, SliderThumb, IconButtonProps, Flex, HStack, Spinner } from '@chakra-ui/react'
 import { MdPause, MdPlayArrow } from 'react-icons/md'
-import { msToHMS } from '../utils/msToHMS';
+import { msToHMS, msToEng } from '../utils/msToHMS';
 export interface VideoMetadata {
   src: string;
   poster?: string;
@@ -139,7 +139,7 @@ const VideoPlayer: FC<VideoMetadata> = ({ src, title, shortTitle, description, s
           {description}
         </Text>
         <Text align={'right'}>
-          {msToHMS(duration.current)}
+          {msToEng(duration.current)}
         </Text>
         <Text align={'right'}>
           {msToHMS(startTimeStamp)} - {msToHMS(endTimeStamp)}
